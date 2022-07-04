@@ -200,10 +200,12 @@ enc28j60_read(const struct enc28j60 *config, uint8_t instruction, uint8_t *data,
 	if (config->critical_section != NULL) {
 		critical_section_enter_blocking(config->critical_section);
 	}
+	spi_init(config->spi, 20000000);
 	gpio_put(config->cs_pin, 0);
 	spi_write_blocking(config->spi, &instruction, 1);
 	spi_read_blocking(config->spi, 0, data, len);
 	gpio_put(config->cs_pin, 1);
+	spi_deinit(config->spi);
 	if (config->critical_section != NULL) {
 		critical_section_exit(config->critical_section);
 	}
@@ -215,10 +217,12 @@ enc28j60_write(const struct enc28j60 *config, uint8_t instruction, const uint8_t
 	if (config->critical_section != NULL) {
 		critical_section_enter_blocking(config->critical_section);
 	}
+	spi_init(config->spi, 20000000);
 	gpio_put(config->cs_pin, 0);
 	spi_write_blocking(config->spi, &instruction, 1);
 	spi_write_blocking(config->spi, data, len);
 	gpio_put(config->cs_pin, 1);
+	spi_deinit(config->spi);
 	if (config->critical_section != NULL) {
 		critical_section_exit(config->critical_section);
 	}
